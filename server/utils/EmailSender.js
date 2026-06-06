@@ -5,16 +5,25 @@ dotenv.config()
 
 export const sendEmail = async (email, subject, template) => {
     try {
-        console.log("sending email...", email, subject)
-        const sendMail = await transporter.sendMail({
-            from: "EduGrow",
+        console.log("Sending email...");
+        console.log("To:", email);
+        console.log("Subject:", subject);
+
+        const info = await transporter.sendMail({
+            from: `"EduGrow" <${process.env.EMAIL}>`,
             to: email,
             subject: subject,
-            html: template
-        })
-        console.log("Sendmail res: ", sendMail)
+            html: template,
+        });
+
+        console.log("Email sent successfully");
+        console.log("Message ID:", info.messageId);
+
+        return info;
+    } catch (error) {
+        console.error("MAIL ERROR:");
+        console.error(error);
+
+        throw error;
     }
-    catch (err) {
-        console.error("MAIL ERROR:", err)
-    }
-}
+};
