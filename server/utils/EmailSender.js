@@ -1,29 +1,16 @@
-import dotenv from 'dotenv'
-import { transporter } from '../config/Mail.js'
-import { otpTemplate } from '../templates/otpTemplate.js'
-dotenv.config()
+import { resend } from "../config/Mail.js";
 
 export const sendEmail = async (email, subject, template) => {
     try {
-        console.log("Sending email...");
-        console.log("To:", email);
-        console.log("Subject:", subject);
-
-        const info = await transporter.sendMail({
-            from: `"EduGrow" <${process.env.EMAIL}>`,
+        const response = await resend.emails.send({
+            from: "EduGrow <onboarding@resend.dev>",
             to: email,
-            subject: subject,
+            subject,
             html: template,
         });
 
-        console.log("Email sent successfully");
-        console.log("Message ID:", info.messageId);
-
-        return info;
+        console.log("Email sent:", response);
     } catch (error) {
-        console.error("MAIL ERROR:");
-        console.error(error);
-
-        throw error;
+        console.error("Email error:", error);
     }
 };
