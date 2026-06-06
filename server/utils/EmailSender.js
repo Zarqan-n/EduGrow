@@ -5,6 +5,7 @@ dotenv.config()
 
 export const sendEmail = async (email, subject, template) => {
     try {
+        console.log("sending email...",email,subject)
         const sendMail = await transporter.sendMail({
             from: "EduGrow",
             to: email,
