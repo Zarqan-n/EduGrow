@@ -1,5 +1,22 @@
-import { Resend } from "resend";
-import dotenv from 'dotenv'
-dotenv.config()
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
 
-export const resend = new Resend(process.env.RESEND_API_KEY);
+dotenv.config();
+
+export const transporter = nodemailer.createTransport({
+    host: "smtp-relay.brevo.com",
+    port: 587,
+    secure: false,
+    auth: {
+        user: process.env.BREVO_EMAIL,
+        pass: process.env.BREVO_SMTP_KEY,
+    },
+});
+
+transporter.verify((error) => {
+    if (error) {
+        console.error("SMTP ERROR:", error);
+    } else {
+        console.log("Brevo SMTP Ready");
+    }
+});

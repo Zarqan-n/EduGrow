@@ -1,16 +1,21 @@
-import { resend } from "../config/Mail.js";
+import { transporter } from "../config/Mail.js";
 
 export const sendEmail = async (email, subject, template) => {
     try {
-        const response = await resend.emails.send({
-            from: "EduGrow <onboarding@resend.dev>",
+        console.log("Sending email to:", email);
+
+        const info = await transporter.sendMail({
+            from: `"EduGrow" <${process.env.BREVO_EMAIL}>`,
             to: email,
             subject,
             html: template,
         });
 
-        console.log("Email sent:", response);
+        console.log("Email sent:", info.messageId);
+
+        return info;
     } catch (error) {
-        console.error("Email error:", error);
+        console.error("MAIL ERROR:", error);
+        throw error;
     }
 };
