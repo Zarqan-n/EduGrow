@@ -8,13 +8,15 @@ import { CourseRouter } from './routes/course.js'
 import { BookRouter } from './routes/book.js'
 import { JobRouter } from './routes/job.js'
 import cors from 'cors'
-dotenv.config()
+import dns from 'dns'
 
+dotenv.config()
+dns.setDefaultResultOrder('ipv4first')
 
 const app = express()
 app.use(express.json())
 app.use(cors({
-  origin: ["https://edugrowzarqan.netlify.app","http://localhost:5173"]
+    origin: ["https://edugrowzarqan.netlify.app", "http://localhost:5173"]
 }));
 app.use(cookieParser())
 app.use("/api/auth", AuthRouter)
