@@ -33,4 +33,22 @@ const PORT = process.env.PORT || 4000
 app.listen(PORT, () => {
     connectDB()
     console.log(`Server running at port: ${PORT}`)
-})
+
+    import("net").then(({ default: net }) => {
+        const socket = net.connect(587, "smtp.gmail.com");
+
+        socket.on("connect", () => {
+            console.log("CONNECTED TO GMAIL SMTP");
+            socket.destroy();
+        });
+
+        socket.on("error", (err) => {
+            console.log("TCP ERROR:", err);
+        });
+
+        socket.setTimeout(10000, () => {
+            console.log("TCP TIMEOUT");
+            socket.destroy();
+        });
+    });
+});
