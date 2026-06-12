@@ -1,79 +1,85 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { authService } from '../services/authService'
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { authService } from "../services/authService";
 
 export default function Signup() {
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    role: 'Student',
-    otp: '',
-  })
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
-  const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "Student",
+    otp: "",
+  });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-    })
-  }
+    });
+  };
 
   const sendOTP = async (e) => {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
     try {
-      await authService.sendOTP(formData.email)
-      setSuccess('OTP sent to your email')
-      setStep(2)
+      const otp = await authService.sendOTP(formData.email);
+      setSuccess(
+        `Due to free version of hosting unable to sent email otp :${otp.data.otp}`,
+      );
+      setStep(2);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to send OTP')
+      setError(err.response?.data?.message || "Failed to send OTP");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleSignup = async (e) => {
-    e.preventDefault()
-    setError('')
+    e.preventDefault();
+    setError("");
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match')
-      return
+      setError("Passwords do not match");
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
 
     try {
       await authService.signup({
         name: formData.name,
-        email: formData.email, 
+        email: formData.email,
         password: formData.password,
         role: formData.role,
         otp: formData.otp,
-      })
+      });
 
-      navigate('/login')
+      navigate("/login");
     } catch (err) {
-      setError(err.response?.data?.message || 'Signup failed')
+      setError(err.response?.data?.message || "Signup failed");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-700 via-primary-800 to-primary-900 flex items-center justify-center py-12 px-4">
       <div className="max-w-md w-full bg-white/10 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-2xl p-8">
         <div className="mb-8">
-          <h2 className="text-4xl font-black text-white mb-2">Create Account</h2>
-          <p className="text-cyan-200 text-sm">Join our learning community today</p>
+          <h2 className="text-4xl font-black text-white mb-2">
+            Create Account
+          </h2>
+          <p className="text-cyan-200 text-sm">
+            Join our learning community today
+          </p>
         </div>
 
         {error && (
@@ -91,7 +97,9 @@ export default function Signup() {
         {step === 1 ? (
           <form onSubmit={sendOTP} className="space-y-5">
             <div>
-              <label className="block text-cyan-300 text-sm font-semibold mb-2">Full Name</label>
+              <label className="block text-cyan-300 text-sm font-semibold mb-2">
+                Full Name
+              </label>
               <input
                 type="text"
                 name="name"
@@ -104,7 +112,9 @@ export default function Signup() {
             </div>
 
             <div>
-              <label className="block text-cyan-300 text-sm font-semibold mb-2">Email</label>
+              <label className="block text-cyan-300 text-sm font-semibold mb-2">
+                Email
+              </label>
               <input
                 type="email"
                 name="email"
@@ -117,21 +127,31 @@ export default function Signup() {
             </div>
 
             <div>
-              <label className="block text-cyan-300 text-sm font-semibold mb-2">Select Role</label>
+              <label className="block text-cyan-300 text-sm font-semibold mb-2">
+                Select Role
+              </label>
               <select
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
                 className="w-full rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md px-4 py-3 text-white outline-none focus:ring-2 focus:ring-cyan-300 transition duration-300 cursor-pointer"
               >
-                <option value="Student" className="bg-primary-900">Student</option>
-                <option value="Teacher" className="bg-primary-900">Teacher</option>
-                <option value="Institution" className="bg-primary-900">Institution</option>
+                <option value="Student" className="bg-primary-900">
+                  Student
+                </option>
+                <option value="Teacher" className="bg-primary-900">
+                  Teacher
+                </option>
+                <option value="Institution" className="bg-primary-900">
+                  Institution
+                </option>
               </select>
             </div>
 
             <div>
-              <label className="block text-cyan-300 text-sm font-semibold mb-2">Password</label>
+              <label className="block text-cyan-300 text-sm font-semibold mb-2">
+                Password
+              </label>
               <input
                 type="password"
                 name="password"
@@ -144,7 +164,9 @@ export default function Signup() {
             </div>
 
             <div>
-              <label className="block text-cyan-300 text-sm font-semibold mb-2">Confirm Password</label>
+              <label className="block text-cyan-300 text-sm font-semibold mb-2">
+                Confirm Password
+              </label>
               <input
                 type="password"
                 name="confirmPassword"
@@ -161,13 +183,15 @@ export default function Signup() {
               disabled={loading}
               className="w-full px-4 py-3 bg-cyan-900 hover:bg-cyan-800 text-white rounded-2xl font-bold transition duration-300 disabled:opacity-50"
             >
-              {loading ? 'Sending OTP...' : 'Continue'}
+              {loading ? "Sending OTP..." : "Continue"}
             </button>
           </form>
         ) : (
           <form onSubmit={handleSignup} className="space-y-5">
             <div>
-              <label className="block text-cyan-300 text-sm font-semibold mb-2">Enter OTP</label>
+              <label className="block text-cyan-300 text-sm font-semibold mb-2">
+                Enter OTP
+              </label>
               <input
                 type="text"
                 name="otp"
@@ -185,7 +209,7 @@ export default function Signup() {
               disabled={loading}
               className="w-full px-4 py-3 bg-cyan-900 hover:bg-cyan-800 text-white rounded-2xl font-bold transition duration-300 disabled:opacity-50"
             >
-              {loading ? 'Creating account...' : 'Sign Up'}
+              {loading ? "Creating account..." : "Sign Up"}
             </button>
 
             <button
@@ -200,8 +224,11 @@ export default function Signup() {
 
         <div className="mt-8 text-center">
           <p className="text-gray-300">
-            Already have an account?{' '}
-            <a href="/login" className="text-cyan-300 font-bold hover:text-cyan-200 transition">
+            Already have an account?{" "}
+            <a
+              href="/login"
+              className="text-cyan-300 font-bold hover:text-cyan-200 transition"
+            >
               Sign in here
             </a>
           </p>
@@ -214,5 +241,5 @@ export default function Signup() {
         </div>
       </div>
     </div>
-  )
+  );
 }

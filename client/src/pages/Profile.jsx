@@ -31,9 +31,11 @@ export default function Profile() {
 
   // UI state
   const [activeTab, setActiveTab] = useState("personal");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [loadingPass, setLoadingPass] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [link, setLink] = useState("");
 
   useEffect(() => {
     fetchProfile();
@@ -41,6 +43,7 @@ export default function Profile() {
 
   const fetchProfile = async () => {
     try {
+      setLoading(true);
       const response = await userService.getProfile();
       const userData = response.data.data;
       const profileData = userData?.profile || {};
@@ -139,12 +142,14 @@ export default function Profile() {
 
   const handleResetPassword = async () => {
     try {
-      await authService.forgotPassword(user?.email);
+      setLoadingPass(true);
+      const url = await authService.forgotPassword(user?.email);
+      setLink(url.data.createUrl);
       setSuccess("Password reset link sent to your email");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to send reset link");
     } finally {
-      setLoading(false);
+      setLoadingPass(false);
     }
   };
 
@@ -459,15 +464,19 @@ export default function Profile() {
                   </div>
                 </div>
               </div>
-
+              {link && (
+                <a className="text-blue-900" href={link}>
+                  Click here to reset password
+                </a>
+              )}
               <div className="space-y-3">
                 <h3 className="font-bold text-white">Account Actions</h3>
                 <button
                   onClick={handleResetPassword}
-                  // href="/forgot-password"
+                  disabled={loadingPass}
                   className="block w-full px-6 py-3 border border-cyan-300 rounded-2xl text-cyan-300 hover:bg-cyan-300/10 transition text-center font-bold transform hover:scale-105 duration-300"
                 >
-                  Reset Password via Email
+                  {loadingPass ? "Sending..." : "Reset Password via Email"}
                 </button>
               </div>
             </div>
