@@ -37,7 +37,9 @@ export default function CourseDetails() {
       const response = await courseService.getCourseById(id);
       setCourse(response.data.data);
       const reviewsRes = await courseService.getReviews({ courseId: id });
+      console.log(reviewsRes)
       setReviews(reviewsRes.data.reviews || []);
+      console.log(reviewsRes.data.reviews)
     } catch (error) {
       console.error("Error fetching course:", error);
     } finally {
@@ -161,7 +163,10 @@ export default function CourseDetails() {
                   {[
                     { icon: <GraduationCap size={18} />, label: teacherName },
                     { icon: <Globe size={18} />, label: course.language },
-                    { icon: <Users size={18} />, label: `${course.enrolledStudents?.length || 0} students` },
+                    {
+                      icon: <Users size={18} />,
+                      label: `${course.enrolledStudents?.length || 0} students`,
+                    },
                     { icon: <Star size={18} />, label: averageRating },
                   ].map((item) => (
                     <div
@@ -180,8 +185,16 @@ export default function CourseDetails() {
               {[
                 { label: "Language", value: course.language, icon: <Globe /> },
                 { label: "Schedule", value: course.timing, icon: <Clock3 /> },
-                { label: "Duration", value: course.duration, icon: <PlayCircle /> },
-                { label: "Reviews", value: course.ratingAndReview?.length || 0, icon: <Star /> },
+                {
+                  label: "Duration",
+                  value: course.duration,
+                  icon: <PlayCircle />,
+                },
+                {
+                  label: "Reviews",
+                  value: course.ratingAndReview?.length || 0,
+                  icon: <Star />,
+                },
               ].map((item) => (
                 <div key={item.label} className="glass-card rounded-3xl p-5">
                   <div className="mb-4 inline-flex rounded-2xl bg-cyan-400/20 p-3 text-cyan-200">

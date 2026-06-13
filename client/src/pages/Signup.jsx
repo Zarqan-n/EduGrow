@@ -32,7 +32,7 @@ export default function Signup() {
     try {
       const otp = await authService.sendOTP(formData.email);
       setSuccess(
-        `Due to free version of hosting unable to sent email otp :${otp.data.otp}`,
+        `Due to lack of email service unable send otp to email verify directly: ${otp.data.otp}`,
       );
       setStep(2);
     } catch (err) {
